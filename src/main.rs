@@ -16,13 +16,14 @@ fn main() -> Result<()> {
     match command.as_str() {
         ".dbinfo" => {
             let mut file = File::open(&args[1])?;
-            let mut header = [0; 100];
+            let mut header = [0; 110];
             file.read_exact(&mut header)?;
 
-            #[allow(unused_variables)]
             let page_size = u16::from_be_bytes([header[16], header[17]]);
+            let table_count: u16 = u16::from_be_bytes([header[103], header[104]]); 
 
             println!("database page size: {}", page_size);
+            println!("number of tables: {}", table_count);
         }
         _ => bail!("Missing or invalid command passed: {}", command),
     }
